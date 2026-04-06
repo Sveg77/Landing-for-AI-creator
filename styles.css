@@ -491,6 +491,16 @@ ol {
   font-size: 1.06rem;
 }
 
+.brand-title {
+  font-family: "Commissioner", "Segoe UI", sans-serif;
+  font-size: 1.06rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1d4241;
+  line-height: 1;
+}
+
 .brand-logo {
   width: 46px;
   height: 46px;
