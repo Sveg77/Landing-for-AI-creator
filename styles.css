@@ -1213,3 +1213,205 @@ textarea {
 #benefits .section-note {
   color: #1d4241;
 }
+
+/* Compact layout update */
+.section-dark {
+  background: #103136;
+}
+
+.section-dark h2,
+.section-dark h3,
+.section-dark p,
+.section-dark li,
+.section-dark summary {
+  color: #f8fbff;
+}
+
+.compact-pills-section .container > h2 {
+  margin-bottom: 24px;
+}
+
+.pill-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pill-list li {
+  background: #ffffff;
+  color: #1d4241;
+  border: 1px solid #d8e8e6;
+  border-radius: 999px;
+  padding: 10px 14px;
+  text-align: center;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+#results .pill-list li:nth-child(2),
+#results .pill-list li:nth-child(4),
+#results .pill-list li:nth-child(5) {
+  text-transform: uppercase;
+}
+
+#formats .card-grid {
+  gap: 12px;
+}
+
+#formats .card {
+  background: #103136;
+  color: #f8fbff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 28px rgba(7, 35, 40, 0.2);
+}
+
+#formats .card h3,
+#formats .card p {
+  color: #f8fbff !important;
+}
+
+#formats .card:hover,
+#formats .card:hover h3,
+#formats .card:hover p {
+  color: #f8fbff;
+}
+
+#formats .card:hover {
+  transform: translateY(-2px);
+  background: #134049;
+}
+
+#formats .section-note {
+  background: #ffffff;
+  border: 1px solid #d8e8e6;
+  border-left: 3px solid #1d4241;
+  color: #44536e;
+}
+
+#process .steps-list li {
+  background: #ffffff;
+  border: 1px solid #d8e8e6;
+  color: #1d4241;
+  border-radius: 12px;
+  padding: 10px 14px 10px 40px;
+}
+
+#process .steps-list li::before {
+  width: 22px;
+  height: 22px;
+  left: 10px;
+  border: none;
+  color: #1d4241;
+  background: #e7f1ef;
+  font-size: 0.75rem;
+}
+
+.accordion-list {
+  display: grid;
+  gap: 10px;
+}
+
+.accordion-item {
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.section-muted .accordion-item {
+  background: #ffffff;
+  border-color: #d8e8e6;
+}
+
+.accordion-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 18px;
+  font-weight: 600;
+  position: relative;
+  padding-right: 44px;
+}
+
+.accordion-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.accordion-item[open] summary::after,
+.accordion-item:hover summary::after {
+  content: "−";
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s ease, padding 0.28s ease;
+  padding: 0 18px;
+}
+
+.accordion-item[open] .accordion-content,
+.accordion-item:hover .accordion-content {
+  max-height: 420px;
+  padding: 0 18px 16px;
+}
+
+.accordion-content p:last-child {
+  margin-bottom: 0;
+}
+
+.accordion-content .simple-list li {
+  color: inherit;
+}
+
+.cert-grid {
+  align-items: stretch;
+}
+
+.cert-card {
+  background: #ffffff;
+  border: 1px solid #d8e8e6;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 14px;
+}
+
+.cert-card img {
+  width: 100%;
+  height: 100%;
+  max-height: 280px;
+  object-fit: contain;
+}
+
+.cert-card-placeholder {
+  text-align: center;
+  color: #1d4241;
+}
+
+.cert-card-placeholder h3 {
+  margin-bottom: 6px;
+}
+
+@media (min-width: 700px) {
+  .pill-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 880px) {
+  .cert-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
