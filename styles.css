@@ -1806,6 +1806,35 @@ textarea {
   color: #1d4241;
 }
 
+/* Portfolio buttons: force text inversion with card hover */
+#portfolio .portfolio-card:hover .btn-secondary,
+#portfolio .portfolio-card:hover .btn-ghost,
+#portfolio .portfolio-card:focus-within .btn-secondary,
+#portfolio .portfolio-card:focus-within .btn-ghost {
+  color: var(--c-white-main) !important;
+  border-color: rgba(248, 251, 255, 0.45) !important;
+  background: rgba(16, 49, 54, 0.22) !important;
+}
+
+#portfolio .portfolio-card:hover .btn-secondary *,
+#portfolio .portfolio-card:hover .btn-ghost *,
+#portfolio .portfolio-card:focus-within .btn-secondary *,
+#portfolio .portfolio-card:focus-within .btn-ghost * {
+  color: var(--c-white-main) !important;
+}
+
+#portfolio .portfolio-card:hover .portfolio-fallback-link,
+#portfolio .portfolio-card:focus-within .portfolio-fallback-link {
+  background: rgba(16, 49, 54, 0.18) !important;
+  border-color: rgba(248, 251, 255, 0.35) !important;
+  color: var(--c-white-main) !important;
+}
+
+#portfolio .portfolio-card:hover .portfolio-fallback-link a,
+#portfolio .portfolio-card:focus-within .portfolio-fallback-link a {
+  color: var(--c-white-main) !important;
+}
+
 #certificates .cert-card,
 #certificates .cert-card h3,
 #certificates .cert-card p {
