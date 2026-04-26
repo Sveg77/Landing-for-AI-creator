@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — Landing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="container admin-header-row">
+      <div>
+        <h1>Админ-панель</h1>
+        <p>Заказы, статусы, услуги, аналитика</p>
+      </div>
+      <nav class="quick-nav">
+        <a href="#dashboard">Дашборд</a>
+        <a href="#orders">Заказы</a>
+        <a href="#services">Услуги</a>
+        <a href="index.html" target="_blank" rel="noopener noreferrer">Открыть сайт</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="dashboard" class="panel">
+      <div class="panel-head">
+        <h2>Дашборд</h2>
+        <div class="filters-row">
+          <select id="dash-range">
+            <option value="today">За день</option>
+            <option value="week">За неделю</option>
+            <option value="month" selected>За месяц</option>
+            <option value="3m">За 3 месяца</option>
+            <option value="6m">За 6 месяцев</option>
+            <option value="12m">За 12 месяцев</option>
+            <option value="custom">Произвольный период</option>
+          </select>
+          <input id="dash-from" type="date" disabled>
+          <input id="dash-to" type="date" disabled>
+          <button id="dash-apply" class="btn">Применить</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card">
+          <h3>Всего заказов</h3>
+          <p id="stat-orders" class="stat-value">0</p>
+        </article>
+        <article class="stat-card">
+          <h3>Сумма продаж</h3>
+          <p id="stat-sales" class="stat-value">0 ₽</p>
+        </article>
+        <article class="stat-card">
+          <h3>По статусам</h3>
+          <ul id="stat-statuses" class="stat-list"></ul>
+        </article>
+        <article class="stat-card">
+          <h3>Быстрые ссылки</h3>
+          <div class="quick-links">
+            <a class="btn btn-ghost" href="#orders">К заказам</a>
+            <a class="btn btn-ghost" href="#services">К услугам</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="orders" class="panel">
+      <div class="panel-head">
+        <h2>Заказы</h2>
+        <div class="filters-row">
+          <input id="order-search" type="text" placeholder="Поиск по имени клиента или телефону">
+          <select id="order-status-filter">
+            <option value="all">Все статусы</option>
+            <option value="new">Новый</option>
+            <option value="in_progress">В работе</option>
+            <option value="completed">Завершен</option>
+            <option value="archived">В архиве</option>
+          </select>
+          <select id="order-category-filter">
+            <option value="all">Все категории</option>
+            <option value="general">Общее</option>
+            <option value="consultation">Консультация</option>
+            <option value="audit">Аудит</option>
+            <option value="project">Проект</option>
+            <option value="support">Сопровождение</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Дата</th>
+              <th>Клиент</th>
+              <th>Контакт</th>
+              <th>Категория</th>
+              <th>Сумма</th>
+              <th>Статус</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="chats" class="panel">
+      <div class="panel-head">
+        <h2>Чаты и тикеты</h2>
+        <div class="filters-row">
+          <input id="chat-search" type="text" placeholder="Поиск по имени или телефону">
+          <select id="chat-filter">
+            <option value="all">Все чаты</option>
+            <option value="ticket_open">Только тикеты (открытые)</option>
+            <option value="ticket_all">Все тикеты</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Дата</th>
+              <th>Клиент</th>
+              <th>Последнее сообщение</th>
+              <th>Тикет</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody id="chats-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="services" class="panel">
+      <div class="panel-head">
+        <h2>Ассортимент услуг</h2>
+        <div class="filters-row">
+          <input id="service-search" type="text" placeholder="Поиск услуги">
+          <select id="service-category-filter">
+            <option value="all">Все категории</option>
+            <option value="consultation">Консультация</option>
+            <option value="audit">Аудит</option>
+            <option value="project">Проект</option>
+            <option value="support">Сопровождение</option>
+            <option value="other">Другое</option>
+          </select>
+        </div>
+      </div>
+
+      <form id="service-form" class="service-form">
+        <input id="service-id" type="hidden">
+        <input id="service-name" type="text" placeholder="Название услуги" required>
+        <select id="service-category" required>
+          <option value="">Категория</option>
+          <option value="consultation">Консультация</option>
+          <option value="audit">Аудит</option>
+          <option value="project">Проект</option>
+          <option value="support">Сопровождение</option>
+          <option value="other">Другое</option>
+        </select>
+        <input id="service-price" type="number" min="0" step="100" placeholder="Цена (₽)">
+        <textarea id="service-description" rows="3" placeholder="Описание услуги"></textarea>
+        <input id="service-image" type="file" accept="image/*">
+        <button class="btn" type="submit">Сохранить услугу</button>
+      </form>
+
+      <div id="services-grid" class="services-grid"></div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

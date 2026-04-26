@@ -23,6 +23,10 @@
         <a href="#certificates">Сертификаты</a>
         <a href="#contact" data-i18n-ru="Контакты" data-i18n-en="Contacts">Контакты</a>
       </nav>
+      <div class="lang-switch" role="group" aria-label="Выбор языка">
+        <button class="lang-btn is-active" id="lang-ru-btn" type="button">RU</button>
+        <button class="lang-btn" id="lang-en-btn" type="button">EN</button>
+      </div>
       <button class="btn btn-secondary btn-small theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="Переключить тему">
         <span class="theme-toggle-icon" aria-hidden="true">☀️</span>
         <span class="theme-toggle-label">Светлая тема</span>
@@ -395,8 +399,434 @@
     </div>
   </div>
   <div class="toast" id="submit-toast" hidden>Открываю Telegram…</div>
+  <button class="chatbot-launcher" id="chatbot-launcher" type="button" aria-label="Открыть чат-бот">Вызвать помощника</button>
+  <section class="chatbot-panel" id="chatbot-panel" hidden>
+    <div class="chatbot-head">
+      <h3>AI-помощник</h3>
+      <div class="chatbot-head-actions">
+        <button type="button" id="chatbot-reset" class="chatbot-reset-btn">Новый чат</button>
+        <button type="button" id="chatbot-close" aria-label="Закрыть чат">×</button>
+      </div>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages"></div>
+    <div class="chat-quick-replies" id="chatbot-quick-replies" hidden></div>
+    <form class="chatbot-lead" id="chatbot-lead-form" autocomplete="off">
+      <div class="form-autofill-trap" aria-hidden="true">
+        <input type="text" name="username" tabindex="-1" autocomplete="username">
+        <input type="password" name="password" tabindex="-1" autocomplete="current-password">
+      </div>
+      <p class="chatbot-greeting">Приветствую Вас!<br>Я помогу подходящий формат работы и сориентирую по услугам.</p>
+      <p>Перед началом чата укажите контактные данные:</p>
+      <input id="chatbot-name" name="chatbot_name_field" type="text" placeholder="Ваше имя" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" required>
+      <select id="chatbot-contact-method" required>
+        <option value="">Способ связи</option>
+        <option value="telegram">Telegram</option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="phone">Телефон</option>
+        <option value="email">E-mail</option>
+        <option value="other">Другой</option>
+      </select>
+      <input id="chatbot-contact-value" name="chatbot_contact_field" type="text" placeholder="Выберите способ связи" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" disabled required>
+      <label class="consent-row" for="chatbot-consent">
+        <input id="chatbot-consent" type="checkbox" required>
+        <span>Я ознакомлен(а) с <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">политикой конфиденциальности</a> и даю согласие на обработку персональных данных.</span>
+      </label>
+      <button class="btn btn-primary" type="submit">Начать чат</button>
+    </form>
+    <form class="chatbot-input-row" id="chatbot-message-form" autocomplete="off" hidden>
+      <input id="chatbot-input" name="chatbot_message_field" type="text" placeholder="Напишите вопрос..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" disabled>
+      <button class="btn btn-primary" id="chatbot-send" type="submit" disabled>Отправить</button>
+    </form>
+    <div class="chatbot-manager-row" id="chatbot-manager-row" hidden>
+      <a class="chat-manager-btn" href="https://t.me/Sveg77" target="_blank" rel="noopener noreferrer">Хочу связаться с менеджером</a>
+    </div>
+  </section>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      var storageKey = "landing-language";
+      var ruBtn = document.getElementById("lang-ru-btn");
+      var enBtn = document.getElementById("lang-en-btn");
+      if (!ruBtn || !enBtn) return;
+
+      var messages = {
+        ru: {
+          nav: ["Форматы", "Обо мне", "Сертификаты", "Контакты"],
+          themeLight: "Светлая тема",
+          themeDark: "Тёмная тема",
+          bookSmall: "Записаться",
+          heroEyebrow: "Разработка цифровых продуктов",
+          heroLead: "Помогаю разобраться в задаче, выбрать подходящий формат и собрать решение — от первой консультации до реализации. Можно прийти даже с сырой идеей: объясню всё простым языком, без лишнего.",
+          heroFeatures: [
+            "можно прийти без готового ТЗ",
+            "15 минут первой консультации бесплатно",
+            "сайты, приложения, Telegram mini apps, MVP, игры, боты, AI-инструменты",
+            "спокойно, понятно, без давления"
+          ],
+          heroCta: ["Записаться на консультацию", "Обсудить задачу", "Оставить заявку"],
+          heroCardTitle: "Коротко о формате работы",
+          heroCardText: "Вы приходите с задачей в любом состоянии — от идеи в заметках до готового проекта. Вместе определяем уместный следующий шаг и собираем решение без лишней суеты.",
+          heroCardBtn: "Записаться на первую консультацию",
+          audienceTitle: "Кому подойдёт",
+          audienceText: "Особенно хорошо этот формат работает там, где важны ясность, человеческая коммуникация и аккуратный подход без лишней суеты.",
+          audiencePills: ["эксперты", "бизнес", "стартапы", "авторы", "бренды", "агентства"],
+          formatsTitle: "Формат работы и стоимость",
+          formatsText: "Стоимость зависит от объёма, сложности и типа задачи. Но чтобы вам было проще сориентироваться, вот базовые точки входа:",
+          formatsCardsTitles: ["Первая консультация", "Дальнейшая консультация", "Проектная работа", "Сопровождение / аудит"],
+          formatsCardsTexts: [
+            ["15 минут бесплатно", "Это короткий спокойный разговор, на котором можно понять, подходим ли мы друг другу и какой формат работы будет для вас разумным: консультация, аудит, проект или более простой старт"],
+            ["2500 ₽ / час", "Подходит, если нужно глубже проработать задачу, получить понятный план действий и двигаться дальше без хаоса."],
+            ["От 10 000 ₽", "Сайты, лендинги, приложения, игры, боты, AI-инструменты и другие цифровые решения"],
+            ["По задаче и объёму", "Если у вас уже есть сайт, лендинг, интерфейс или концепция, но хочется понять, что улучшить и куда двигаться дальше."]
+          ],
+          formatsNote: "Если бюджет ограничен, это тоже можно спокойно обсудить. Иногда разумнее начать с небольшой версии или с консультации, чем сразу заходить в большой объём.",
+          processTitle: "Как строится работа",
+          processText: "Мне важно, чтобы работа была понятной не только в начале, но и в процессе. Без ощущения, что проект куда-то ушёл и теперь остаётся только ждать.",
+          processItems: ["Разбираем задачу и контекст", "Определяем формат и объём", "Продумываем структуру, логику и сценарии", "Собираем первую версию", "Дорабатываем детали", "Готовим к запуску или передаче"],
+          processNote: "Сроки зависят от задачи. Иногда работа занимает от одного дня, если речь о небольшом объёме или понятном решении.",
+          aboutTitle: "Кто будет с вами работать и какой у меня подход",
+          aboutSummaries: ["Кто будет с вами работать", "Какой у меня подход"],
+          aboutParagraphs: [
+            "Меня зовут Светлана. Я создаю сайты, лендинги, приложения, игры и другие цифровые продукты — от простых решений до более нестандартных форматов.",
+            "Я работаю на стыке идеи, логики, структуры и реализации. Для меня важно не просто сделать красивый экран, а собрать продукт, который будет уместен именно для вашей задачи.",
+            "Всё началось с одного запроса. Потом стало понятно, что мне близок сам процесс: взять идею, которая пока существует только в словах, заметках или ощущениях, и помочь ей стать чем-то ясным, аккуратным и рабочим."
+          ],
+          aboutDash: ["объясняю простыми словами", "не перегружаю процесс", "не продаю лишнее", "думаю и о смысле, и о реализации"],
+          aboutApproach: ["сначала ясность, потом реализация", "меньше лишнего, больше смысла", "объясняю без тяжёлого техноязыка", "думаю и о смысле, и о реализации"],
+          resultsTitle: "Результат работы",
+          resultsText: "Результат зависит от запроса, но чаще всего после работы у клиента появляется не только сам продукт, но и больше ясности внутри проекта.",
+          resultsCards: [
+            ["Сайт или лендинг", "Сайт или лендинг, который выглядит собранно и профессионально."],
+            ["Первая версия продукта", "Первая версия продукта, которую уже можно показывать людям."],
+            ["Приложение или мини-сервис", "Приложение или мини-сервис под конкретную задачу."],
+            ["Telegram mini app, бот или AI", "Telegram mini app, бот или AI-инструмент."],
+            ["Интерактив или игра", "Интерактивный или игровой проект."],
+            ["Структура и следующий шаг", "Более понятная структура, логика и следующий шаг."]
+          ],
+          resultsNote: "Я не обещаю гарантированных результатов в духе «сайт сразу всё изменит». Но могу помочь собрать решение, которое будет выглядеть достойно, работать по задаче и не создавать лишнего шума.",
+          concernsTitle: "Вопросы и сомнения перед стартом",
+          concernsItems: [
+            ["У меня пока слишком сырая идея", "Это нормально. Необязательно приходить с готовым ТЗ. Часто первый шаг и есть — вместе понять, что именно стоит делать."],
+            ["Боюсь, что предложат много лишнего", "Сначала определяем задачу и приоритеты, и только потом объём. Без навязывания лишних этапов."],
+            ["Я не разбираюсь в разработке", "И не нужно. Объясняю простым языком и веду процесс прозрачно на каждом шаге."],
+            ["Мне важно, чтобы было не только красиво, но и по делу", "Поэтому я начинаю не с внешнего слоя, а с задачи, структуры и логики."],
+            ["Боюсь, что всё затянется", "Сроки зависят от задачи, но на старте мы сразу определяем реалистичный формат работы. Небольшие проекты иногда можно сделать от 1 дня."],
+            ["Сколько стоит работа", "Первая консультация — 15 минут бесплатно. Дальше: консультация 2500 ₽/час, проектная работа — от 10 000 ₽."]
+          ],
+          portfolioTitle: "Портфолио",
+          portfolioText: "Примеры проектов можно открыть по ссылкам ниже. Больше проектов у меня в Телеграм-канале.",
+          portfolioBtn: "Перейти в Telegram-канал",
+          portfolioCards: [
+            ["Интернет-магазин домашнего текстиля", "Открыть проект", "Если не открывается, скопируйте ссылку вручную:"],
+            ["Telegram-бот для интернет-магазина домашнего текстиля", "Открыть проект", "Если не открывается, скопируйте ссылку вручную:"],
+            ["Игра", "Скачать ZIP", "Проблема со скачиванием?<br>Написать в Telegram"]
+          ],
+          certTitle: "Сертификаты",
+          certPlaceholderTitle: "Сертификат по Вайбкодингу",
+          certPlaceholderText: "Ожидается",
+          reviewsTitle: "Отзывы",
+          reviewQuotes: [
+            "«После общения стало гораздо понятнее, что именно нам нужно и как к этому подойти.»",
+            "«Понравилось, что всё объяснялось спокойно, без перегруза и без ощущения, что мне что-то навязывают.»",
+            "«Получился аккуратный и понятный результат, очень в тему для нашей задачи.»"
+          ],
+          reviewAuthors: ["Анна, эксперт по обучению", "Михаил, владелец локального бренда", "Ирина, автор онлайн-курса"],
+          nextReview: "Следующий отзыв",
+          finalTitle: "Можно начать с короткого разговора",
+          finalText: "Если у вас есть идея, проект или задача, которую хочется спокойно превратить во что-то понятное и рабочее — напишите. Начать можно с бесплатной 15-минутной консультации, чтобы просто понять, какой формат вам сейчас подойдёт.",
+          finalBtns: ["Записаться на консультацию", "Оставить заявку", "Написать в Telegram", "Написать в WhatsApp"],
+          formTitle: "Заявка на консультацию",
+          formLabels: ["Имя", "Способ связи", "Короткое описание задачи"],
+          formPlaceholders: ["Как к вам обращаться", "Telegram, WhatsApp, телефон или email", "Расскажите пару слов о задаче"],
+          consent: "Я ознакомлен(а) с политикой конфиденциальности и даю согласие на обработку персональных данных.",
+          submit: "Отправить заявку",
+          footerMiddle: "Политика конфиденциальности",
+          footerLinks: ["Telegram", "WhatsApp", "заявка / консультация"],
+          popupClose: "Закрыть форму"
+        },
+        en: {
+          nav: ["Formats", "About", "Certificates", "Contacts"],
+          themeLight: "Light theme",
+          themeDark: "Dark theme",
+          bookSmall: "Book now",
+          heroEyebrow: "Digital product development",
+          heroLead: "I help you unpack your task, choose the right format, and build a practical solution from first consultation to launch. You can come even with a raw idea: I explain everything clearly and simply.",
+          heroFeatures: [
+            "you can start without a detailed brief",
+            "first 15-minute consultation is free",
+            "websites, apps, Telegram mini apps, MVPs, games, bots, AI tools",
+            "calm, clear, no pressure"
+          ],
+          heroCta: ["Book a consultation", "Discuss your task", "Leave a request"],
+          heroCardTitle: "How we work in short",
+          heroCardText: "You can come with your task in any state - from a rough note to an existing project. We define the most relevant next step and assemble a clean solution without chaos.",
+          heroCardBtn: "Book the first consultation",
+          audienceTitle: "Who it is for",
+          audienceText: "This format works especially well where clarity, human communication, and a thoughtful process matter most.",
+          audiencePills: ["experts", "businesses", "startups", "creators", "brands", "agencies"],
+          formatsTitle: "Work format and pricing",
+          formatsText: "Pricing depends on scope, complexity, and type of task. Here are the basic entry points to help you navigate.",
+          formatsCardsTitles: ["First consultation", "Follow-up consultation", "Project work", "Support / audit"],
+          formatsCardsTexts: [
+            ["15 minutes free", "A short, calm conversation to understand whether we are a good fit and what format is best for you now: consultation, audit, project, or a lighter start."],
+            ["2,500 RUB / hour", "Best when you need deeper task breakdown, a clear action plan, and confident next steps."],
+            ["From 10,000 RUB", "Websites, landing pages, apps, games, bots, AI tools, and other digital products."],
+            ["By scope and task", "If you already have a website, landing page, interface, or concept and want to understand what to improve and where to move next."]
+          ],
+          formatsNote: "If your budget is limited, that is absolutely okay to discuss. Sometimes it is smarter to start with a smaller version or consultation first.",
+          processTitle: "How the process works",
+          processText: "I make sure the workflow is clear not only at the start, but throughout the project - without the feeling that everything disappeared into a black box.",
+          processItems: ["Analyze your task and context", "Define format and scope", "Design structure, logic, and scenarios", "Build the first version", "Refine details", "Prepare for launch or handover"],
+          processNote: "Timeline depends on the task. Smaller projects can sometimes be delivered in as little as one day.",
+          aboutTitle: "Who you work with and my approach",
+          aboutSummaries: ["Who you work with", "My approach"],
+          aboutParagraphs: [
+            "My name is Svetlana. I create websites, landing pages, apps, games, and other digital products - from simple to more unconventional formats.",
+            "I work at the intersection of idea, logic, structure, and implementation. For me, it is not only about a beautiful screen, but about building the right product for your goal.",
+            "It all started with one request. Then I realized I truly enjoy turning ideas that exist only in words or notes into something clear, neat, and working."
+          ],
+          aboutDash: ["I explain in plain language", "I keep the process lightweight", "I do not upsell unnecessary work", "I care about both strategy and implementation"],
+          aboutApproach: ["clarity first, implementation second", "less noise, more meaning", "no heavy technical jargon", "balance of thinking and execution"],
+          resultsTitle: "Result of the work",
+          resultsText: "The result depends on your request, but most often clients get not only the product itself, but also much more clarity inside their project.",
+          resultsCards: [
+            ["Website or landing page", "A website or landing page that looks clean and professional."],
+            ["First product version", "A first version that you can already show to users or clients."],
+            ["App or mini-service", "An app or mini-service tailored to your specific task."],
+            ["Telegram mini app, bot, or AI", "A Telegram mini app, bot, or AI-based tool."],
+            ["Interactive or game", "An interactive product or game experience."],
+            ["Structure and next step", "A clearer structure, logic, and understanding of what to do next."]
+          ],
+          resultsNote: "I do not promise unrealistic outcomes like \"a website will change everything instantly\". But I can help you build a solution that looks solid, works for your task, and avoids unnecessary noise.",
+          concernsTitle: "Questions and concerns before start",
+          concernsItems: [
+            ["My idea is still too raw", "That is normal. You do not need a finished brief. Often the first step is simply defining what should be done first."],
+            ["I am afraid I will be offered too much extra", "We define priorities first, and only then scope - no unnecessary stages pushed in."],
+            ["I do not understand development", "You do not have to. My job is to keep the process transparent and explain everything clearly."],
+            ["I need not only beauty, but real value", "That is why we start from task, structure, and logic - not from visuals only."],
+            ["I am afraid it will take too long", "Timeline depends on scope, but we define a realistic format from the start. Small projects can be done quickly."],
+            ["How much does it cost", "First consultation is free for 15 minutes. Then: 2,500 RUB/hour for consultations, project work from 10,000 RUB."]
+          ],
+          portfolioTitle: "Portfolio",
+          portfolioText: "You can open project examples using the links below. More projects are available in my Telegram channel.",
+          portfolioBtn: "Open Telegram channel",
+          portfolioCards: [
+            ["Home textile online store", "Open project", "If it does not open, copy this link manually:"],
+            ["Telegram bot for a home textile store", "Open project", "If it does not open, copy this link manually:"],
+            ["Game", "Download ZIP", "Download issue?<br>Message me on Telegram"]
+          ],
+          certTitle: "Certificates",
+          certPlaceholderTitle: "Vibe Coding certificate",
+          certPlaceholderText: "Coming soon",
+          reviewsTitle: "Reviews",
+          reviewQuotes: [
+            "\"After our conversation, it became much clearer what we actually needed and how to approach it.\"",
+            "\"I loved how calmly everything was explained, without overload or pressure.\"",
+            "\"The final result was clean, clear, and exactly right for our task.\""
+          ],
+          reviewAuthors: ["Anna, education expert", "Mikhail, local brand owner", "Irina, course creator"],
+          nextReview: "Next review",
+          finalTitle: "You can start with a short call",
+          finalText: "If you have an idea, project, or task you want to turn into something clear and practical - message me. We can start with a free 15-minute consultation.",
+          finalBtns: ["Book a consultation", "Leave a request", "Message on Telegram", "Message on WhatsApp"],
+          formTitle: "Consultation request",
+          formLabels: ["Name", "Preferred contact", "Short task description"],
+          formPlaceholders: ["How should I address you?", "Telegram, WhatsApp, phone, or email", "Describe your task in a few words"],
+          consent: "I have read the privacy policy and agree to personal data processing.",
+          submit: "Send request",
+          footerMiddle: "Privacy policy",
+          footerLinks: ["Telegram", "WhatsApp", "request / consultation"],
+          popupClose: "Close form"
+        }
+      };
+
+      function setText(selector, value, index) {
+        var nodes = document.querySelectorAll(selector);
+        if (!nodes.length) return;
+        var node = typeof index === "number" ? nodes[index] : nodes[0];
+        if (node) node.textContent = value;
+      }
+
+      function setHTML(selector, value, index) {
+        var nodes = document.querySelectorAll(selector);
+        if (!nodes.length) return;
+        var node = typeof index === "number" ? nodes[index] : nodes[0];
+        if (node) node.innerHTML = value;
+      }
+
+      function setList(selector, values) {
+        var nodes = document.querySelectorAll(selector);
+        nodes.forEach(function (node, idx) {
+          if (typeof values[idx] !== "undefined") {
+            node.textContent = values[idx];
+          }
+        });
+      }
+
+      function setPlaceholders(selector, values) {
+        var nodes = document.querySelectorAll(selector);
+        nodes.forEach(function (node, idx) {
+          if (typeof values[idx] !== "undefined") {
+            node.setAttribute("placeholder", values[idx]);
+          }
+        });
+      }
+
+      function applyLanguage(lang) {
+        var i18n = messages[lang] || messages.ru;
+        document.documentElement.lang = lang;
+        ruBtn.classList.toggle("is-active", lang === "ru");
+        enBtn.classList.toggle("is-active", lang === "en");
+
+        setText(".header-nav a:nth-child(1)", i18n.nav[0]);
+        setText(".header-nav a:nth-child(2)", i18n.nav[1]);
+        setText(".header-nav a:nth-child(3)", i18n.nav[2]);
+        setText(".header-nav a:nth-child(4)", i18n.nav[3]);
+        setText(".site-header .btn-primary.btn-small.js-open-popup", i18n.bookSmall);
+
+        setText(".hero .eyebrow", i18n.heroEyebrow);
+        setText(".hero .lead", i18n.heroLead);
+        setList(".hero .feature-list li", i18n.heroFeatures);
+        setList(".hero .cta-row .btn", i18n.heroCta);
+        setText(".hero-card h2", i18n.heroCardTitle);
+        setText(".hero-card p", i18n.heroCardText);
+        setText(".hero-card .btn", i18n.heroCardBtn);
+
+        setText("#audience h2", i18n.audienceTitle);
+        setText("#audience .audience-subtitle", i18n.audienceText);
+        setList("#audience .pill-list li", i18n.audiencePills);
+
+        setText("#formats h2", i18n.formatsTitle);
+        setText("#formats .section-text", i18n.formatsText);
+        setList("#formats .card h3", i18n.formatsCardsTitles);
+        var formatCards = document.querySelectorAll("#formats .card");
+        formatCards.forEach(function (card, idx) {
+          var paragraphs = card.querySelectorAll("p");
+          var lines = i18n.formatsCardsTexts[idx] || [];
+          paragraphs.forEach(function (p, pIdx) {
+            if (typeof lines[pIdx] !== "undefined") {
+              p.textContent = lines[pIdx];
+            }
+          });
+        });
+        setText("#formats .section-note", i18n.formatsNote);
+
+        setText("#process h2", i18n.processTitle);
+        setText("#process .section-text", i18n.processText);
+        setList("#process .timeline li", i18n.processItems);
+        setText("#process .section-note", i18n.processNote);
+
+        setText("#about h2", i18n.aboutTitle);
+        setText("#about .accordion-item summary", i18n.aboutSummaries[0], 0);
+        setText("#about .accordion-item summary", i18n.aboutSummaries[1], 1);
+        setList("#about .accordion-item:first-child .accordion-content p", i18n.aboutParagraphs);
+        setList("#about .dash-list li", i18n.aboutDash);
+        setList("#about .accordion-item:nth-child(2) .simple-list li", i18n.aboutApproach);
+
+        setText("#results h2", i18n.resultsTitle);
+        setText("#results .section-text", i18n.resultsText);
+        var resultCards = document.querySelectorAll("#results .result-field-card");
+        resultCards.forEach(function (card, idx) {
+          var title = card.querySelector(".result-field-title");
+          var text = card.querySelector("p");
+          if (i18n.resultsCards[idx]) {
+            if (title) title.textContent = i18n.resultsCards[idx][0];
+            if (text) text.textContent = i18n.resultsCards[idx][1];
+          }
+        });
+        setText("#results .section-note", i18n.resultsNote);
+
+        setText("#concerns-faq h2", i18n.concernsTitle);
+        var concernItems = document.querySelectorAll("#concerns-faq .accordion-item");
+        concernItems.forEach(function (item, idx) {
+          if (!i18n.concernsItems[idx]) return;
+          var sum = item.querySelector("summary");
+          var p = item.querySelector(".accordion-content p");
+          if (sum) sum.textContent = i18n.concernsItems[idx][0];
+          if (p) p.textContent = i18n.concernsItems[idx][1];
+        });
+
+        setText("#portfolio h2", i18n.portfolioTitle);
+        setText("#portfolio .portfolio-channel-row .section-text", i18n.portfolioText);
+        setText("#portfolio .portfolio-channel-btn", i18n.portfolioBtn);
+        var portfolioCards = document.querySelectorAll("#portfolio .portfolio-card");
+        portfolioCards.forEach(function (card, idx) {
+          if (!i18n.portfolioCards[idx]) return;
+          var h3 = card.querySelector("h3");
+          if (h3) h3.textContent = i18n.portfolioCards[idx][0];
+          if (idx < 2) {
+            var actionBtn = card.querySelector(".portfolio-link");
+            var fallback = card.querySelector(".portfolio-fallback-link");
+            if (actionBtn) actionBtn.textContent = i18n.portfolioCards[idx][1];
+            if (fallback) {
+              var url = idx === 0 ? "https://soft-haven-boutique.lovable.app/" : "https://t.me/sofrtextil_bot";
+              fallback.innerHTML = i18n.portfolioCards[idx][2] + "<br><a href=\"" + url + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + url + "</a>";
+            }
+          } else {
+            var gameBtns = card.querySelectorAll(".portfolio-actions .btn");
+            if (gameBtns[0]) gameBtns[0].textContent = i18n.portfolioCards[idx][1];
+            if (gameBtns[1]) gameBtns[1].innerHTML = i18n.portfolioCards[idx][2];
+          }
+        });
+
+        setText("#certificates h2", i18n.certTitle);
+        setText("#certificates .cert-card-placeholder h3", i18n.certPlaceholderTitle);
+        setText("#certificates .cert-card-placeholder p", i18n.certPlaceholderText);
+
+        setText("#reviews h2", i18n.reviewsTitle);
+        setList("#reviews blockquote", i18n.reviewQuotes);
+        setList("#reviews .review-author", i18n.reviewAuthors);
+        setText("#review-next-btn", i18n.nextReview);
+
+        setText("#final-cta h2", i18n.finalTitle);
+        setText("#final-cta .section-text", i18n.finalText);
+        setList("#final-cta .cta-row .btn", i18n.finalBtns);
+        setText("#contact-form h3", i18n.formTitle);
+        setList("#contact-form label:not(.consent-row)", i18n.formLabels);
+        setPlaceholders("#contact-form input[type='text'], #contact-form textarea", i18n.formPlaceholders);
+        setHTML("#contact-form .consent-row span", i18n.consent.replace("политикой конфиденциальности", "<a href=\"privacy-policy.html\" target=\"_blank\" rel=\"noopener noreferrer\">политикой конфиденциальности</a>").replace("privacy policy", "<a href=\"privacy-policy.html\" target=\"_blank\" rel=\"noopener noreferrer\">privacy policy</a>"));
+        setText("#contact-form button[type='submit']", i18n.submit);
+
+        setText("#popup-title", i18n.formTitle);
+        setList("#popup-form label:not(.consent-row)", i18n.formLabels);
+        setPlaceholders("#popup-form input[type='text'], #popup-form textarea", i18n.formPlaceholders);
+        setHTML("#popup-form .consent-row span", i18n.consent.replace("политикой конфиденциальности", "<a href=\"privacy-policy.html\" target=\"_blank\" rel=\"noopener noreferrer\">политикой конфиденциальности</a>").replace("privacy policy", "<a href=\"privacy-policy.html\" target=\"_blank\" rel=\"noopener noreferrer\">privacy policy</a>"));
+        setText("#popup-form button[type='submit']", i18n.submit);
+        setText("#popup-close", "×");
+        document.getElementById("popup-close")?.setAttribute("aria-label", i18n.popupClose);
+
+        document.querySelectorAll(".js-open-popup").forEach(function (btn) {
+          var text = (btn.textContent || "").trim();
+          if (text) btn.setAttribute("data-form-title", text);
+        });
+
+        setText(".footer-middle a", i18n.footerMiddle);
+        setList(".footer-links a", i18n.footerLinks);
+
+        var themeLabel = document.querySelector("#theme-toggle-btn .theme-toggle-label");
+        if (themeLabel) {
+          var isLight = document.documentElement.getAttribute("data-theme") === "dark";
+          themeLabel.textContent = isLight ? i18n.themeDark : i18n.themeLight;
+        }
+
+        if (window.setHeroTypingLanguage) {
+          window.setHeroTypingLanguage(lang);
+        }
+        window.__landingLang = lang;
+      }
+
+      function setLang(lang) {
+        localStorage.setItem(storageKey, lang);
+        applyLanguage(lang);
+      }
+
+      ruBtn.addEventListener("click", function () { setLang("ru"); });
+      enBtn.addEventListener("click", function () { setLang("en"); });
+
+      applyLanguage(localStorage.getItem(storageKey) || "ru");
+    })();
+  </script>
   <script>
     (function () {
       var storageKey = "landing-theme-mode";
@@ -409,13 +839,13 @@
         if (mode === "light") {
           document.documentElement.setAttribute("data-theme", "dark");
           if (iconEl) iconEl.textContent = "🌙";
-          if (labelEl) labelEl.textContent = "Тёмная тема";
+          if (labelEl) labelEl.textContent = window.__landingLang === "en" ? "Dark theme" : "Тёмная тема";
           toggleBtn.setAttribute("aria-label", "Включить тёмную тему");
           return;
         }
         document.documentElement.removeAttribute("data-theme");
         if (iconEl) iconEl.textContent = "☀️";
-        if (labelEl) labelEl.textContent = "Светлая тема";
+        if (labelEl) labelEl.textContent = window.__landingLang === "en" ? "Light theme" : "Светлая тема";
         toggleBtn.setAttribute("aria-label", "Включить светлую тему");
       }
 
@@ -1089,7 +1519,7 @@
 
       function showToast(message) {
         if (!toast) return;
-        toast.textContent = message || "Открываю Telegram…";
+        toast.textContent = message || (document.documentElement.lang === "en" ? "Opening Telegram..." : "Открываю Telegram…");
         toast.hidden = false;
         toast.classList.add("is-visible");
         if (toastTimer) clearTimeout(toastTimer);
@@ -1107,14 +1537,49 @@
         var name = (formData.get("name") || "").toString().trim();
         var contact = (formData.get("contact") || "").toString().trim();
         var task = (formData.get("task") || "").toString().trim();
+        var isEn = document.documentElement.lang === "en";
         var lines = [
-          "Новая заявка с сайта",
-          "Форма: " + title,
-          "Имя: " + (name || "не указано"),
-          "Контакт: " + (contact || "не указан"),
-          "Задача: " + (task || "не указана")
+          isEn ? "New website request" : "Новая заявка с сайта",
+          (isEn ? "Form: " : "Форма: ") + title,
+          (isEn ? "Name: " : "Имя: ") + (name || (isEn ? "not specified" : "не указано")),
+          (isEn ? "Contact: " : "Контакт: ") + (contact || (isEn ? "not specified" : "не указан")),
+          (isEn ? "Task: " : "Задача: ") + (task || (isEn ? "not specified" : "не указана"))
         ];
         return encodeURIComponent(lines.join("\n"));
+      }
+
+      function saveOrder(form) {
+        var formData = new FormData(form);
+        var name = (formData.get("name") || "").toString().trim();
+        var contact = (formData.get("contact") || "").toString().trim();
+        var task = (formData.get("task") || "").toString().trim();
+        var formTitle = (formData.get("formTitle") || form.querySelector("h3")?.textContent || "Заявка").toString().trim();
+        var phoneMatch = contact.match(/\+?\d[\d\s\-()]{8,}\d/);
+        var phone = phoneMatch ? phoneMatch[0].replace(/[^\d+]/g, "") : "";
+        var order = {
+          id: "ORD-" + Date.now().toString(36).toUpperCase(),
+          createdAt: new Date().toISOString(),
+          clientName: name || "Не указано",
+          contact: contact || "Не указан",
+          phone: phone,
+          task: task || "Не указана",
+          category: "general",
+          amount: 0,
+          status: "new",
+          archived: false,
+          source: "landing",
+          formTitle: formTitle
+        };
+        try {
+          var key = "landingAdminOrders";
+          var raw = localStorage.getItem(key);
+          var parsed = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(parsed)) parsed = [];
+          parsed.unshift(order);
+          localStorage.setItem(key, JSON.stringify(parsed));
+        } catch (e) {
+          // keep form flow even if storage unavailable
+        }
       }
 
       openButtons.forEach(function (button) {
@@ -1143,13 +1608,15 @@
       forms.forEach(function (form) {
         form.addEventListener("submit", function (event) {
           event.preventDefault();
+          var isEn = document.documentElement.lang === "en";
+          saveOrder(form);
           var text = encodeMessage(form);
           var tgUrl = "https://t.me/" + telegramUsername + "?text=" + text;
-          showToast("Открываю Telegram…");
+          showToast(isEn ? "Opening Telegram..." : "Открываю Telegram…");
           window.open(tgUrl, "_blank", "noopener");
           if (sentToastTimer) clearTimeout(sentToastTimer);
           sentToastTimer = setTimeout(function () {
-            showToast("Заявка сформирована и отправлена. Я свяжусь с вами в ближайшее время.");
+            showToast(isEn ? "Request created and sent. I will contact you shortly." : "Заявка сформирована и отправлена. Я свяжусь с вами в ближайшее время.");
           }, 620);
           form.reset();
           if (form.id === "popup-form") {
@@ -1159,5 +1626,26 @@
       });
     })();
   </script>
+  <script>
+    (function () {
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+
+      function forceTop() {
+        window.scrollTo(0, 0);
+        requestAnimationFrame(function () {
+          window.scrollTo(0, 0);
+        });
+        setTimeout(function () {
+          window.scrollTo(0, 0);
+        }, 60);
+      }
+
+      window.addEventListener("load", forceTop);
+      window.addEventListener("pageshow", forceTop);
+    })();
+  </script>
+  <script src="chatbot.js"></script>
 </body>
 </html>
