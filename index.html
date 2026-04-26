@@ -23,7 +23,11 @@
         <a href="#certificates">Сертификаты</a>
         <a href="#contact" data-i18n-ru="Контакты" data-i18n-en="Contacts">Контакты</a>
       </nav>
-      <a class="btn btn-primary btn-small" href="#final-cta" data-i18n-ru="Записаться" data-i18n-en="Book now">Записаться</a>
+      <button class="btn btn-secondary btn-small theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="Переключить тему">
+        <span class="theme-toggle-icon" aria-hidden="true">☀️</span>
+        <span class="theme-toggle-label">Светлая тема</span>
+      </button>
+      <a class="btn btn-primary btn-small js-open-popup" href="#" data-form-title="Записаться" data-i18n-ru="Записаться" data-i18n-en="Book now">Записаться</a>
     </div>
   </header>
 
@@ -47,9 +51,9 @@
             <li>спокойно, понятно, без давления</li>
           </ul>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#final-cta">Записаться на консультацию</a>
-            <a class="btn btn-secondary" href="#contact-form">Обсудить задачу</a>
-            <a class="btn btn-ghost" href="#contact-form">Оставить заявку</a>
+            <a class="btn btn-primary js-open-popup" href="#" data-form-title="Записаться на консультацию">Записаться на консультацию</a>
+            <a class="btn btn-secondary js-open-popup" href="#" data-form-title="Обсудить задачу">Обсудить задачу</a>
+            <a class="btn btn-ghost js-open-popup" href="#" data-form-title="Оставить заявку">Оставить заявку</a>
           </div>
         </div>
         <aside class="hero-card">
@@ -58,7 +62,7 @@
           </figure>
           <h2>Коротко о формате работы</h2>
           <p>Вы приходите с задачей в любом состоянии — от идеи в заметках до готового проекта. Вместе определяем уместный следующий шаг и собираем решение без лишней суеты.</p>
-          <a class="btn btn-primary" href="#formats">Записаться на первую консультацию</a>
+          <a class="btn btn-primary js-open-popup" href="#" data-form-title="Записаться на первую консультацию">Записаться на первую консультацию</a>
         </aside>
       </div>
     </section>
@@ -226,19 +230,30 @@
     <section class="section section-muted" id="portfolio">
       <div class="container">
         <h2>Портфолио</h2>
-        <p class="section-text">Примеры проектов можно открыть по ссылкам ниже. При желании добавим больше кейсов и подробные описания.</p>
+        <div class="portfolio-channel-row">
+          <p class="section-text">Примеры проектов можно открыть по ссылкам ниже. Больше проектов у меня в Телеграм-канале.</p>
+          <a class="btn btn-secondary btn-small portfolio-channel-btn" href="https://t.me/MYNEYROSFERA" target="_blank" rel="noopener noreferrer">Перейти в Telegram-канал</a>
+        </div>
         <div class="card-grid grid-3 portfolio-grid">
           <article class="card portfolio-card">
-            <h3>Лендинг для эксперта</h3>
-            <a class="btn btn-secondary portfolio-link" href="#" target="_blank" rel="noopener noreferrer">Открыть проект</a>
+            <img class="portfolio-preview" src="portfolio-home-textile.svg" alt="Превью интернет-магазина домашнего текстиля">
+            <h3>Интернет-магазин домашнего текстиля</h3>
+            <a class="btn btn-secondary portfolio-link" href="https://soft-haven-boutique.lovable.app/" target="_blank" rel="noopener noreferrer">Открыть проект</a>
+            <p class="portfolio-fallback-link">Если не открывается, скопируйте ссылку вручную:<br><a href="https://soft-haven-boutique.lovable.app/" target="_blank" rel="noopener noreferrer">https://soft-haven-boutique.lovable.app/</a></p>
           </article>
           <article class="card portfolio-card">
-            <h3>Telegram mini app</h3>
-            <a class="btn btn-secondary portfolio-link" href="#" target="_blank" rel="noopener noreferrer">Открыть проект</a>
+            <img class="portfolio-preview" src="portfolio-telegram-bot.svg" alt="Превью Telegram-бота для интернет-магазина домашнего текстиля">
+            <h3>Telegram-бот для интернет-магазина домашнего текстиля</h3>
+            <a class="btn btn-secondary portfolio-link" href="https://t.me/sofrtextil_bot" target="_blank" rel="noopener noreferrer">Открыть проект</a>
+            <p class="portfolio-fallback-link">Если не открывается, скопируйте ссылку вручную:<br><a href="https://t.me/sofrtextil_bot" target="_blank" rel="noopener noreferrer">https://t.me/sofrtextil_bot</a></p>
           </article>
           <article class="card portfolio-card">
-            <h3>Веб-приложение</h3>
-            <a class="btn btn-secondary portfolio-link" href="#" target="_blank" rel="noopener noreferrer">Открыть проект</a>
+            <img class="portfolio-preview" src="portfolio-game.svg" alt="Превью игры для скачивания">
+            <h3>Игра</h3>
+            <div class="portfolio-actions">
+              <a class="btn btn-secondary portfolio-link" href="downloads/memory-salon-game.zip" download>Скачать ZIP</a>
+              <a class="btn btn-ghost portfolio-link" href="https://t.me/Sveg77" target="_blank" rel="noopener noreferrer">Проблема со скачиванием?<br>Написать в Telegram</a>
+            </div>
           </article>
         </div>
       </div>
@@ -275,7 +290,7 @@
         <h2>Отзывы</h2>
         <div class="review-stack-wrap">
           <div class="review-stack" id="review-stack">
-            <article class="card quote-card review-card cursor-target" data-review-id="0">
+            <article class="card quote-card review-card" data-review-id="0">
               <div class="review-head">
                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80" alt="Фото клиента Анна" class="review-avatar">
                 <span class="review-head-label">клиент</span>
@@ -283,7 +298,7 @@
               <blockquote>«После общения стало гораздо понятнее, что именно нам нужно и как к этому подойти.»</blockquote>
               <p class="review-author">Анна, эксперт по обучению</p>
             </article>
-            <article class="card quote-card review-card cursor-target" data-review-id="1">
+            <article class="card quote-card review-card" data-review-id="1">
               <div class="review-head">
                 <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" alt="Фото клиента Михаил" class="review-avatar">
                 <span class="review-head-label">клиент</span>
@@ -291,7 +306,7 @@
               <blockquote>«Понравилось, что всё объяснялось спокойно, без перегруза и без ощущения, что мне что-то навязывают.»</blockquote>
               <p class="review-author">Михаил, владелец локального бренда</p>
             </article>
-            <article class="card quote-card review-card cursor-target" data-review-id="2">
+            <article class="card quote-card review-card" data-review-id="2">
               <div class="review-head">
                 <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80" alt="Фото клиента Ирина" class="review-avatar">
                 <span class="review-head-label">клиент</span>
@@ -300,7 +315,7 @@
               <p class="review-author">Ирина, автор онлайн-курса</p>
             </article>
           </div>
-          <button class="btn btn-secondary cursor-target review-next-btn" id="review-next-btn" type="button" data-i18n-ru="Следующий отзыв" data-i18n-en="Next review">Следующий отзыв</button>
+          <button class="btn btn-secondary review-next-btn" id="review-next-btn" type="button" data-i18n-ru="Следующий отзыв" data-i18n-en="Next review">Следующий отзыв</button>
         </div>
       </div>
     </section>
@@ -311,13 +326,13 @@
           <h2>Можно начать с короткого разговора</h2>
           <p class="section-text">Если у вас есть идея, проект или задача, которую хочется спокойно превратить во что-то понятное и рабочее — напишите. Начать можно с бесплатной 15-минутной консультации, чтобы просто понять, какой формат вам сейчас подойдёт.</p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#contact-form">Записаться на консультацию</a>
-            <a class="btn btn-secondary" href="#contact-form">Оставить заявку</a>
-            <a class="btn btn-ghost" href="#">Написать в Telegram</a>
-            <a class="btn btn-ghost" href="#">Написать в WhatsApp</a>
+            <a class="btn btn-primary js-open-popup" href="#" data-form-title="Записаться на консультацию">Записаться на консультацию</a>
+            <a class="btn btn-secondary js-open-popup" href="#" data-form-title="Оставить заявку">Оставить заявку</a>
+            <a class="btn btn-ghost" href="https://t.me/Sveg77" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+            <a class="btn btn-ghost" href="https://wa.me/79605166925" target="_blank" rel="noopener noreferrer">Написать в WhatsApp</a>
           </div>
         </div>
-        <form class="contact-form card" id="contact-form" action="#" method="post">
+        <form class="contact-form card js-telegram-form" id="contact-form" action="#" method="post">
           <h3>Заявка на консультацию</h3>
           <label for="name">Имя</label>
           <input id="name" name="name" type="text" placeholder="Как к вам обращаться">
@@ -330,7 +345,7 @@
 
           <label class="consent-row" for="consent">
             <input id="consent" name="consent" type="checkbox" required>
-            <span>Согласен на обработку персональных данных</span>
+            <span>Я ознакомлен(а) с <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">политикой конфиденциальности</a> и даю согласие на обработку персональных данных.</span>
           </label>
 
           <button class="btn btn-primary" type="submit">Отправить заявку</button>
@@ -345,16 +360,76 @@
         <p class="footer-name">Светлана Глазова</p>
         <p class="footer-role">разработка сайтов, приложений и цифровых продуктов</p>
       </div>
-      <p class="footer-middle">Потикика конфиденциальности</p>
+      <p class="footer-middle"><a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a></p>
       <nav class="footer-links" aria-label="Контакты и ссылки">
-        <a href="#">Telegram</a>
-        <a href="#">WhatsApp</a>
-        <a href="#contact-form" data-i18n-ru="заявка / консультация" data-i18n-en="request / consultation">заявка / консультация</a>
+        <a href="https://t.me/Sveg77" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a href="https://wa.me/79605166925" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <a class="js-open-popup" href="#" data-form-title="Заявка / консультация" data-i18n-ru="заявка / консультация" data-i18n-en="request / consultation">заявка / консультация</a>
       </nav>
     </div>
   </footer>
 
+  <div class="popup-overlay" id="popup-overlay" hidden>
+    <div class="popup-modal card" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+      <button class="popup-close" type="button" id="popup-close" aria-label="Закрыть форму">×</button>
+      <form class="contact-form js-telegram-form" id="popup-form" action="#" method="post">
+        <h3 id="popup-title">Заявка</h3>
+        <input type="hidden" name="formTitle" id="popup-form-title" value="Заявка">
+
+        <label for="popup-name">Имя</label>
+        <input id="popup-name" name="name" type="text" placeholder="Как к вам обращаться" required>
+
+        <label for="popup-contact">Способ связи</label>
+        <input id="popup-contact" name="contact" type="text" placeholder="Telegram, WhatsApp, телефон или email" required>
+
+        <label for="popup-task">Короткое описание задачи</label>
+        <textarea id="popup-task" name="task" rows="5" placeholder="Расскажите пару слов о задаче"></textarea>
+
+        <label class="consent-row" for="popup-consent">
+          <input id="popup-consent" name="consent" type="checkbox" required>
+          <span>Я ознакомлен(а) с <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">политикой конфиденциальности</a> и даю согласие на обработку персональных данных.</span>
+        </label>
+
+        <button class="btn btn-primary" type="submit">Отправить заявку</button>
+      </form>
+    </div>
+  </div>
+  <div class="toast" id="submit-toast" hidden>Открываю Telegram…</div>
+
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      var storageKey = "landing-theme-mode";
+      var toggleBtn = document.getElementById("theme-toggle-btn");
+      if (!toggleBtn) return;
+
+      function applyTheme(mode) {
+        var iconEl = toggleBtn.querySelector(".theme-toggle-icon");
+        var labelEl = toggleBtn.querySelector(".theme-toggle-label");
+        if (mode === "light") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          if (iconEl) iconEl.textContent = "🌙";
+          if (labelEl) labelEl.textContent = "Тёмная тема";
+          toggleBtn.setAttribute("aria-label", "Включить тёмную тему");
+          return;
+        }
+        document.documentElement.removeAttribute("data-theme");
+        if (iconEl) iconEl.textContent = "☀️";
+        if (labelEl) labelEl.textContent = "Светлая тема";
+        toggleBtn.setAttribute("aria-label", "Включить светлую тему");
+      }
+
+      var savedMode = localStorage.getItem(storageKey) || "dark";
+      applyTheme(savedMode);
+
+      toggleBtn.addEventListener("click", function () {
+        var currentMode = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        var nextMode = currentMode === "dark" ? "light" : "dark";
+        localStorage.setItem(storageKey, nextMode);
+        applyTheme(nextMode);
+      });
+    })();
+  </script>
   <script>
     (function () {
       var heroTitle = document.querySelector(".hero-title");
@@ -521,7 +596,7 @@
 
       if (isMobile) return;
 
-      var autoTargets = document.querySelectorAll("a, button, .btn, .card, .faq-item, input, textarea, .hero-photo-wrap, .brand");
+      var autoTargets = document.querySelectorAll("a, button, .btn, input, textarea, summary");
       autoTargets.forEach(function (el) {
         el.classList.add("cursor-target");
       });
@@ -982,6 +1057,106 @@
           rotateWithSwipe();
         });
       }
+    })();
+  </script>
+  <script>
+    (function () {
+      var telegramUsername = "Sveg77";
+      var popup = document.getElementById("popup-overlay");
+      var popupClose = document.getElementById("popup-close");
+      var popupTitle = document.getElementById("popup-title");
+      var popupFormTitle = document.getElementById("popup-form-title");
+      var toast = document.getElementById("submit-toast");
+      var openButtons = document.querySelectorAll(".js-open-popup");
+      var forms = document.querySelectorAll(".js-telegram-form");
+      var toastTimer = null;
+      var sentToastTimer = null;
+
+      function openPopup(title) {
+        if (!popup) return;
+        var resolvedTitle = title || "Заявка";
+        popup.hidden = false;
+        popupTitle.textContent = resolvedTitle;
+        popupFormTitle.value = resolvedTitle;
+        document.body.style.overflow = "hidden";
+      }
+
+      function closePopup() {
+        if (!popup) return;
+        popup.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      function showToast(message) {
+        if (!toast) return;
+        toast.textContent = message || "Открываю Telegram…";
+        toast.hidden = false;
+        toast.classList.add("is-visible");
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          toast.classList.remove("is-visible");
+          setTimeout(function () {
+            toast.hidden = true;
+          }, 180);
+        }, 1700);
+      }
+
+      function encodeMessage(form) {
+        var formData = new FormData(form);
+        var title = (formData.get("formTitle") || form.querySelector("h3")?.textContent || "Заявка").toString().trim();
+        var name = (formData.get("name") || "").toString().trim();
+        var contact = (formData.get("contact") || "").toString().trim();
+        var task = (formData.get("task") || "").toString().trim();
+        var lines = [
+          "Новая заявка с сайта",
+          "Форма: " + title,
+          "Имя: " + (name || "не указано"),
+          "Контакт: " + (contact || "не указан"),
+          "Задача: " + (task || "не указана")
+        ];
+        return encodeURIComponent(lines.join("\n"));
+      }
+
+      openButtons.forEach(function (button) {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          openPopup(button.getAttribute("data-form-title"));
+        });
+      });
+
+      if (popupClose) {
+        popupClose.addEventListener("click", closePopup);
+      }
+
+      if (popup) {
+        popup.addEventListener("click", function (event) {
+          if (event.target === popup) closePopup();
+        });
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && popup && !popup.hidden) {
+          closePopup();
+        }
+      });
+
+      forms.forEach(function (form) {
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          var text = encodeMessage(form);
+          var tgUrl = "https://t.me/" + telegramUsername + "?text=" + text;
+          showToast("Открываю Telegram…");
+          window.open(tgUrl, "_blank", "noopener");
+          if (sentToastTimer) clearTimeout(sentToastTimer);
+          sentToastTimer = setTimeout(function () {
+            showToast("Заявка сформирована и отправлена. Я свяжусь с вами в ближайшее время.");
+          }, 620);
+          form.reset();
+          if (form.id === "popup-form") {
+            closePopup();
+          }
+        });
+      });
     })();
   </script>
 </body>
