@@ -1,4 +1,11 @@
 :root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --c-ink-deep: #103136;
+  --c-brand-main: #1d4241;
+  --c-white-main: #f8fbff;
   --bg: #0f2424;
   --surface: #1d4241;
   --surface-alt: #e8f3f2;
@@ -32,6 +39,9 @@
 }
 
 :root[data-theme="dark"] {
+  --c-ink-deep: #103136;
+  --c-brand-main: #1d4241;
+  --c-white-main: #f8fbff;
   --bg: #e8f3f2;
   --surface: #1d4241;
   --surface-alt: #0f2424;
@@ -157,8 +167,8 @@ textarea::placeholder,
 
 /* User-requested block-specific contrast rules */
 .site-header .btn-primary.btn-small {
-  background: #1d4241;
-  color: #f8fbff;
+  background: var(--c-brand-main);
+  color: var(--c-white-main);
 }
 
 #requests .card:hover,
@@ -305,7 +315,7 @@ img {
 }
 
 .container {
-  width: min(1140px, calc(100% - 34px));
+  width: min(1140px, calc(100% - 34px - var(--safe-left) - var(--safe-right)));
   margin: 0 auto;
 }
 
@@ -1523,85 +1533,6 @@ textarea {
   padding: 0 18px 16px;
 }
 
-/* About/FAQ accordions: true dark <-> light inversion */
-#about .accordion-item,
-#concerns-faq .accordion-item {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(248, 251, 255, 0.26);
-}
-
-#about .accordion-item:hover,
-#about .accordion-item[open],
-#about .accordion-item:focus-within,
-#concerns-faq .accordion-item:hover,
-#concerns-faq .accordion-item[open],
-#concerns-faq .accordion-item:focus-within {
-  background: #f4faf9 !important;
-  border-color: #c7dfdb !important;
-  box-shadow: 0 14px 26px rgba(12, 37, 42, 0.22);
-}
-
-#about .accordion-item:hover summary,
-#about .accordion-item:hover .accordion-content p,
-#about .accordion-item:hover .accordion-content li,
-#about .accordion-item[open] summary,
-#about .accordion-item[open] .accordion-content p,
-#about .accordion-item[open] .accordion-content li,
-#about .accordion-item:focus-within summary,
-#about .accordion-item:focus-within .accordion-content p,
-#about .accordion-item:focus-within .accordion-content li,
-#concerns-faq .accordion-item:hover summary,
-#concerns-faq .accordion-item:hover .accordion-content p,
-#concerns-faq .accordion-item[open] summary,
-#concerns-faq .accordion-item[open] .accordion-content p,
-#concerns-faq .accordion-item:focus-within summary,
-#concerns-faq .accordion-item:focus-within .accordion-content p {
-  color: #12363c !important;
-}
-
-/* Final override: About + FAQ must invert dark -> near-white */
-#about .accordion-item,
-#concerns-faq .accordion-item {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(248, 251, 255, 0.26) !important;
-}
-
-#about .accordion-item summary,
-#about .accordion-item .accordion-content p,
-#about .accordion-item .accordion-content li,
-#concerns-faq .accordion-item summary,
-#concerns-faq .accordion-item .accordion-content p {
-  color: #f8fbff !important;
-}
-
-#about .accordion-item:hover,
-#about .accordion-item[open],
-#about .accordion-item:focus-within,
-#concerns-faq .accordion-item:hover,
-#concerns-faq .accordion-item[open],
-#concerns-faq .accordion-item:focus-within {
-  background: #f9fdfc !important;
-  border-color: #d1e4e1 !important;
-}
-
-#about .accordion-item:hover summary,
-#about .accordion-item:hover .accordion-content p,
-#about .accordion-item:hover .accordion-content li,
-#about .accordion-item[open] summary,
-#about .accordion-item[open] .accordion-content p,
-#about .accordion-item[open] .accordion-content li,
-#about .accordion-item:focus-within summary,
-#about .accordion-item:focus-within .accordion-content p,
-#about .accordion-item:focus-within .accordion-content li,
-#concerns-faq .accordion-item:hover summary,
-#concerns-faq .accordion-item:hover .accordion-content p,
-#concerns-faq .accordion-item[open] summary,
-#concerns-faq .accordion-item[open] .accordion-content p,
-#concerns-faq .accordion-item:focus-within summary,
-#concerns-faq .accordion-item:focus-within .accordion-content p {
-  color: #103136 !important;
-}
-
 .accordion-content p:last-child {
   margin-bottom: 0;
 }
@@ -1860,20 +1791,6 @@ textarea {
   text-decoration: underline;
 }
 
-/* Contrast safety pass for updated sections */
-#about .accordion-item,
-#concerns-faq .accordion-item {
-  border-color: rgba(248, 251, 255, 0.26);
-}
-
-#about .accordion-item summary,
-#about .accordion-content p,
-#about .accordion-content li,
-#concerns-faq .accordion-item summary,
-#concerns-faq .accordion-content p {
-  color: #f8fbff;
-}
-
 #results .result-field-card,
 #results .result-field-card p,
 #results .result-field-title {
@@ -1911,11 +1828,13 @@ textarea {
 
 .popup-modal {
   width: min(560px, 100%);
+  max-height: min(92dvh, calc(100dvh - var(--safe-top) - var(--safe-bottom) - 24px));
   background: #ffffff;
   color: #1d4241;
   position: relative;
   border: 1px solid #d8e8e6;
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.22);
+  overflow: auto;
 }
 
 .popup-close {
@@ -1959,9 +1878,9 @@ textarea {
   right: 22px;
   bottom: 22px;
   z-index: 110;
-  border: 1px solid #103136;
-  background: #103136;
-  color: #f8fbff;
+  border: 1px solid var(--c-ink-deep);
+  background: var(--c-ink-deep);
+  color: var(--c-white-main);
   border-radius: 999px;
   padding: 12px 18px;
   font: inherit;
@@ -1972,8 +1891,8 @@ textarea {
 }
 
 .chatbot-launcher.is-on-dark {
-  background: #f8fbff;
-  color: #103136;
+  background: var(--c-white-main);
+  color: var(--c-ink-deep);
   border-color: #d4e4e1;
   box-shadow: 0 14px 30px rgba(16, 49, 54, 0.18);
 }
@@ -2034,14 +1953,14 @@ textarea {
 
 .chatbot-reset-btn:hover,
 .chatbot-reset-btn:focus-visible {
-  color: #103136;
+  color: var(--c-ink-deep);
   background: #e8f3f1;
 }
 
 #chatbot-close {
   border: 1px solid #cfe3e0;
   background: #fff;
-  color: #103136;
+  color: var(--c-ink-deep);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -2066,14 +1985,14 @@ textarea {
 
 .chat-msg.user {
   margin-left: auto;
-  background: #1d4241;
-  color: #f8fbff;
+  background: var(--c-brand-main);
+  color: var(--c-white-main);
 }
 
 .chat-msg.bot {
   margin-right: auto;
   background: #eef6f4;
-  color: #103136;
+  color: var(--c-ink-deep);
   border: 1px solid #d6e9e6;
 }
 
@@ -2169,7 +2088,7 @@ textarea {
 
 .chatbot-greeting {
   font-size: 0.88rem;
-  color: #103136;
+  color: var(--c-ink-deep);
   background: #eef6f4;
   border: 1px solid #d6e9e6;
   border-radius: 10px;
@@ -2196,21 +2115,16 @@ textarea {
 .chatbot-panel input,
 .chatbot-panel select,
 .chatbot-panel textarea {
-  color: #103136 !important;
+  color: var(--c-ink-deep) !important;
   background: #ffffff !important;
   border: 1px solid #bcd4d1;
-  -webkit-text-fill-color: #103136;
-  caret-color: #103136;
+  -webkit-text-fill-color: var(--c-ink-deep);
+  caret-color: var(--c-ink-deep);
 }
 
 .chatbot-panel input::placeholder,
 .chatbot-panel textarea::placeholder {
   color: #5f7380 !important;
-  opacity: 1;
-}
-
-.chatbot-input-row input.is-consent-hint::placeholder {
-  color: #c8d4db !important;
   opacity: 1;
 }
 
@@ -2224,6 +2138,254 @@ textarea {
 @media (min-width: 700px) {
   .pill-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 699px) {
+  .site-header {
+    padding-top: max(6px, var(--safe-top));
+  }
+
+  .site-header .container {
+    padding: 0 max(8px, var(--safe-right)) 0 max(8px, var(--safe-left));
+  }
+
+  main {
+    padding-bottom: 78px;
+  }
+
+  .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand cta"
+      "lang theme"
+      "nav nav";
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .header-nav {
+    grid-area: nav;
+    display: flex;
+    gap: 12px;
+    font-size: 0.84rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 2px 2px 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .header-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .brand {
+    grid-area: brand;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-title {
+    font-size: 1rem;
+    line-height: 1.1;
+  }
+
+  .lang-switch {
+    grid-area: lang;
+    justify-self: start;
+  }
+
+  .theme-toggle-btn {
+    grid-area: theme;
+    justify-self: end;
+    padding: 7px 10px;
+  }
+
+  .site-header .btn-primary.btn-small {
+    grid-area: cta;
+    justify-self: end;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+
+  .theme-toggle-btn .theme-toggle-label {
+    display: none;
+  }
+
+  .cta-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .cta-row .btn {
+    width: 100%;
+  }
+
+  .popup-overlay {
+    padding:
+      max(10px, var(--safe-top))
+      max(10px, var(--safe-right))
+      max(10px, var(--safe-bottom))
+      max(10px, var(--safe-left));
+  }
+
+  .popup-modal {
+    width: 100%;
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 20px);
+    border-radius: 14px;
+  }
+
+  .chatbot-launcher {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    bottom: max(12px, var(--safe-bottom));
+    max-width: calc(100vw - max(8px, var(--safe-left)) - max(8px, var(--safe-right)) - 16px);
+    white-space: nowrap;
+  }
+
+  .chatbot-panel {
+    left: max(8px, var(--safe-left));
+    right: max(8px, var(--safe-right));
+    width: calc(100vw - max(8px, var(--safe-left)) - max(8px, var(--safe-right)) - 2px);
+    max-width: none;
+    bottom: calc(max(8px, var(--safe-bottom)) + 56px);
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 86px);
+    border-radius: 14px;
+    box-sizing: border-box;
+  }
+
+  .chatbot-head {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .chatbot-head h3 {
+    min-width: 0;
+    flex: 1;
+    font-size: 0.92rem;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .chatbot-head-actions {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .chatbot-reset-btn {
+    font-size: 0.74rem;
+    padding: 3px 5px;
+    white-space: nowrap;
+  }
+
+  #chatbot-close {
+    width: 28px;
+    height: 28px;
+  }
+
+  .chatbot-messages {
+    min-height: 0;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-title {
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+  }
+
+  .lang-btn {
+    padding: 5px 8px;
+    font-size: 0.72rem;
+  }
+
+  .site-header .btn-primary.btn-small {
+    padding: 7px 10px;
+    font-size: 0.76rem;
+  }
+
+  .theme-toggle-btn {
+    padding: 6px 8px;
+  }
+
+  .chatbot-launcher {
+    padding: 10px 14px;
+    font-size: 0.86rem;
+  }
+}
+
+/* Touch devices: emulate hover inversion via active/focus */
+@media (hover: none) and (pointer: coarse) {
+  :is(
+    #formats .card,
+    #portfolio .portfolio-card,
+    #process .steps-list li,
+    #process .timeline li,
+    #audience .pill-list li
+  ):active,
+  :is(
+    #formats .card,
+    #portfolio .portfolio-card,
+    #process .steps-list li,
+    #process .timeline li,
+    #audience .pill-list li
+  ):focus-within {
+    background: #1d5d63 !important;
+    color: #f8fbff !important;
+    border-color: rgba(248, 251, 255, 0.35) !important;
+    box-shadow: 0 14px 26px rgba(19, 57, 63, 0.24);
+  }
+
+  :is(
+    #formats .card,
+    #portfolio .portfolio-card,
+    #process .steps-list li,
+    #process .timeline li,
+    #audience .pill-list li
+  ):active :is(h3, p, li, a),
+  :is(
+    #formats .card,
+    #portfolio .portfolio-card,
+    #process .steps-list li,
+    #process .timeline li,
+    #audience .pill-list li
+  ):focus-within :is(h3, p, li, a) {
+    color: #f8fbff !important;
+  }
+
+  #about .accordion-item:active,
+  #about .accordion-item[open],
+  #about .accordion-item:focus-within,
+  #concerns-faq .accordion-item:active,
+  #concerns-faq .accordion-item[open],
+  #concerns-faq .accordion-item:focus-within {
+    background: #f9fdfc !important;
+    border-color: #d1e4e1 !important;
+  }
+
+  #about .accordion-item:active summary,
+  #about .accordion-item:active .accordion-content p,
+  #about .accordion-item:active .accordion-content li,
+  #about .accordion-item[open] summary,
+  #about .accordion-item[open] .accordion-content p,
+  #about .accordion-item[open] .accordion-content li,
+  #concerns-faq .accordion-item:active summary,
+  #concerns-faq .accordion-item:active .accordion-content p,
+  #concerns-faq .accordion-item[open] summary,
+  #concerns-faq .accordion-item[open] .accordion-content p {
+    color: #103136 !important;
   }
 }
 
@@ -2245,7 +2407,7 @@ textarea {
 #about .accordion-item .accordion-content li,
 #concerns-faq .accordion-item summary,
 #concerns-faq .accordion-item .accordion-content p {
-  color: #f8fbff !important;
+  color: var(--c-white-main) !important;
 }
 
 #about .accordion-item:hover,
@@ -2273,5 +2435,5 @@ textarea {
 #concerns-faq .accordion-item[open] .accordion-content p,
 #concerns-faq .accordion-item:focus-within summary,
 #concerns-faq .accordion-item:focus-within .accordion-content p {
-  color: #103136 !important;
+  color: var(--c-ink-deep) !important;
 }

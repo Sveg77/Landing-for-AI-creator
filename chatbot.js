@@ -434,9 +434,9 @@
   function updateLauncherContrast() {
     if (launcher.style.display === "none") return;
     var rect = launcher.getBoundingClientRect();
-    var x = rect.left + rect.width / 2;
-    var y = rect.top + rect.height / 2;
-    var stack = document.elementsFromPoint(x, y);
+    var centerX = rect.left + rect.width / 2;
+    var centerY = rect.top + rect.height / 2;
+    var stack = document.elementsFromPoint(centerX, centerY);
     if (!stack || !stack.length) return;
 
     var probeEl = null;
@@ -447,31 +447,56 @@
       probeEl = el;
       break;
     }
+
     if (!probeEl) {
       launcher.classList.remove("is-on-dark");
       return;
     }
 
-    var host = probeEl.closest(".section, .site-header, .site-footer, .final-cta");
+    var host = probeEl.closest(".hero, .section, .site-header, .site-footer, .final-cta");
     if (!host) {
       launcher.classList.remove("is-on-dark");
       return;
     }
 
-    var hasDarkClass = host.classList.contains("section-dark");
-    var bg = window.getComputedStyle(host).backgroundColor;
-    var m = bg && bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
-    var darkByColor = false;
-    if (m) {
+    function luminanceFromRgb(bg) {
+      var m = bg && bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/i);
+      if (!m) return null;
+      var alpha = typeof m[4] === "undefined" ? 1 : Number(m[4]);
+      if (alpha === 0) return null;
       var r = Number(m[1]);
       var g = Number(m[2]);
       var b = Number(m[3]);
-      var luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-      darkByColor = luminance < 0.46;
+      return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
     }
 
-    launcher.classList.toggle("is-on-dark", hasDarkClass || darkByColor);
+    var node = host;
+    var luminance = null;
+    while (node && node !== document.documentElement && node !== document.body) {
+      var bg = window.getComputedStyle(node).backgroundColor;
+      luminance = luminanceFromRgb(bg);
+      if (luminance !== null) break;
+      node = node.parentElement;
+    }
+
+    var isDark = host.classList.contains("section-dark");
+    if (luminance !== null) {
+      isDark = luminance < 0.52;
+    }
+
+    // Hero visually dark even if computed background is transparent.
+    if (host.classList && host.classList.contains("hero")) {
+      isDark = true;
+    }
+
+    launcher.classList.toggle("is-on-dark", isDark);
   }
+
+  window.addEventListener("load", function () {
+    updateLauncherContrast();
+    window.setTimeout(updateLauncherContrast, 120);
+    window.setTimeout(updateLauncherContrast, 400);
+  });
 
   // Initial state: chat stays closed until user clicks launcher
   closePanel();
